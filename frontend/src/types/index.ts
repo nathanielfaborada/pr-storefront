@@ -1,10 +1,4 @@
-export type CategoryType = 
-  | 'all'
-  | 'boxy-tees' 
-  | 'cropped-hoodies' 
-  | 'parachute-cargos' 
-  | 'techwear-outerwear' 
-  | 'accessories';
+export type CategoryType = string;
 
 export type SilhouetteDescriptor = 
   | 'Drop-Shoulder Boxy'
@@ -58,22 +52,30 @@ export interface Item {
   fitpicUrls?: string[];      // On-body model fitpics
   videoUrl?: string;          // 10s silent loop video preview
   
-  // Inventory Status (1-of-1 Lock)
+  // Inventory Status & Quantity
+  stockQuantity?: number;     // e.g. 1 for 1-of-1, or 2, 3, 5+ for batch pieces
+  sizeInventory?: Record<string, number>; // e.g. { S: 1, M: 2, L: 3, XL: 1 }
+  hasCustomSizePricing?: boolean; // true if sizes have different prices
+  sizePricing?: Record<string, number>;   // e.g. { S: 250, M: 250, L: 280, XL: 300 }
+  minPricePhp?: number;
+  maxPricePhp?: number;
   isSoldOut: boolean;         // true when claimed/purchased
   isReserved: boolean;        // true when in active 15-min cart hold
   reservedUntil?: number;     // Timestamp in ms
   
   // Badges & Drop Meta
   dropNumber: string;         // e.g. "DROP-08"
-  isOneOfOne: boolean;        // Always true for curated collection
+  isOneOfOne: boolean;        // true when 1-of-1 curated
   tags: string[];             // e.g. ["260 GSM", "Boxy Fit", "Drop Shoulder", "Charcoal Wash"]
   description: string;
 }
 
 export interface CartItem {
   item: Item;
-  heldAt: number;             // Timestamp in ms
-  holdExpiresAt: number;      // Timestamp in ms (15 mins from heldAt)
+  quantity: number;
+  selectedSize?: string;
+  heldAt?: number;
+  holdExpiresAt?: number;
 }
 
 export type MessageSender = 'shopper' | 'seller' | 'system';
@@ -136,7 +138,7 @@ export interface TrackingStep {
   label: string;
   status: 'completed' | 'current' | 'upcoming';
   timestamp?: string;
-  description: string;
+  description?: string;
 }
 
 export interface OrderPayload {

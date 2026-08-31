@@ -1,10 +1,4 @@
-export type CategoryType = 
-  | 'all'
-  | 'boxy-tees' 
-  | 'cropped-hoodies' 
-  | 'parachute-cargos' 
-  | 'techwear-outerwear' 
-  | 'accessories';
+export type CategoryType = string;
 
 export type SilhouetteDescriptor = 
   | 'Drop-Shoulder Boxy'
@@ -51,6 +45,8 @@ export interface Item {
   images: string[];
   fitpicUrls?: string[];
   videoUrl?: string;
+  stockQuantity?: number;
+  sizeInventory?: Record<string, number>;
   isSoldOut: boolean;
   isReserved: boolean;
   reservedUntil?: number;
@@ -126,7 +122,7 @@ export interface TrackingStep {
   label: string;
   status: 'completed' | 'current' | 'upcoming';
   timestamp?: string;
-  description: string;
+  description?: string;
 }
 
 export interface OrderPayload {

@@ -249,6 +249,20 @@ flowchart TD
   4. `[Step 4] Handed over to Courier (J&T Express / Lalamove)` (Pending)
   5. `[Step 5] Out for Delivery / Mine Delivered` (Pending)
 
+### 3.8 P&R Seller Studio Admin Console (`/admin`)
+* **Seller-First Thrift Drop Architecture:**
+  * Replaces bloated enterprise ERP tables with a high-speed, mobile-friendly drop curation console tailored for Facebook/Instagram live-drop sellers.
+* **⚡ Fast Drop Racks & 1-of-1 Piece Lister:**
+  * Quick 1-click piece creation: Code/Title, Drop Price, Tag Size, Hand-measured **Boxy Width (Pit-to-Pit)**, **Body Length**, and high-res image URL.
+  * Direct 1-tap **"AVAILABLE" ⇄ "CLAIMED"** toggle switches per piece.
+* **🧾 GCash & Maya Receipt Slip Inspector:**
+  * Real-time audit of submitted customer orders with 13-digit reference numbers.
+  * Zoomable screenshot receipt modal with 1-tap **`✓ Valid GCash (Release J&T Waybill)`** and **`⚠️ Flag Joy Miner (Release to Racks)`** buttons.
+* **📦 J&T Express Waybill Manifest & Dispatch:**
+  * 1-click printable shipping waybill labels with simulated barcodes, recipient delivery details, and shipper hub info (Pandi, Bulacan / Quezon City Hub).
+* **⏳ 15-Minute Bag Lock Radar:**
+  * Live countdown tracking of active cart reservations to prevent unfulfilled holds.
+
 ---
 
 ## 4. Component Hierarchy & Enterprise SPA File Structure

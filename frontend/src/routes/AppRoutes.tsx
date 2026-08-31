@@ -1,21 +1,27 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { MainLayout } from '../layouts/MainLayout.tsx';
-import { HomePage } from '../pages/HomePage.tsx';
-import { ProductDetailPage } from '../pages/ProductDetailPage.tsx';
-import { OrderStatusPage } from '../pages/OrderStatusPage.tsx';
-import { LoginPage } from '../pages/LoginPage.tsx';
-import { AccountPage } from '../pages/AccountPage.tsx';
-import { AdminLoginPage } from '../pages/AdminLoginPage.tsx';
-import { AdminPage } from '../pages/AdminPage.tsx';
-import { NotFoundPage } from '../pages/NotFoundPage.tsx';
+
+// Customer / Public Storefront Pages
+import { HomePage } from '../pages/customer/HomePage.tsx';
+import { ProductDetailPage } from '../pages/customer/ProductDetailPage.tsx';
+import { OrderStatusPage } from '../pages/customer/OrderStatusPage.tsx';
+import { LoginPage } from '../pages/customer/LoginPage.tsx';
+import { AccountPage } from '../pages/customer/AccountPage.tsx';
+import { NotFoundPage } from '../pages/customer/NotFoundPage.tsx';
+
+// Admin / Seller Studio Pages
+import { AdminLoginPage } from '../pages/admin/AdminLoginPage.tsx';
+import { AdminPage } from '../pages/admin/AdminPage.tsx';
+import { AdminCuratePage } from '../pages/admin/AdminCuratePage.tsx';
+
 import { ProtectedRoute } from './ProtectedRoute.tsx';
 
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>
-        {/* Public Storefront Routes */}
+        {/* Customer / Public Storefront Routes */}
         <Route index element={<HomePage />} />
         <Route path="drops/:id" element={<ProductDetailPage />} />
         <Route path="orders/:orderId" element={<OrderStatusPage />} />
@@ -23,12 +29,60 @@ export const AppRoutes: React.FC = () => {
         <Route path="account" element={<AccountPage />} />
         <Route path="admin/login" element={<AdminLoginPage />} />
 
-        {/* Protected Admin / Vault Manager Route */}
+        {/* Protected Admin / Seller Studio Routes */}
         <Route
           path="admin"
           element={
             <ProtectedRoute requireAdmin>
               <AdminPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/products"
+          element={
+            <ProtectedRoute requireAdmin>
+              <AdminPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/orders"
+          element={
+            <ProtectedRoute requireAdmin>
+              <AdminPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/dispatch"
+          element={
+            <ProtectedRoute requireAdmin>
+              <AdminPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/holds"
+          element={
+            <ProtectedRoute requireAdmin>
+              <AdminPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/drops/new"
+          element={
+            <ProtectedRoute requireAdmin>
+              <AdminCuratePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/drops/edit/:id"
+          element={
+            <ProtectedRoute requireAdmin>
+              <AdminCuratePage />
             </ProtectedRoute>
           }
         />

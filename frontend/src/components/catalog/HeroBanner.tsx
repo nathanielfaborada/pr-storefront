@@ -2,7 +2,7 @@ import React from 'react';
 import { Item } from '../../types/index.ts';
 import { formatPhp } from '../../utils/index.ts';
 import { Badge } from '../common/Badge.tsx';
-import { Zap, Eye, Ruler } from 'lucide-react';
+import { ShoppingBag, Eye, Ruler } from 'lucide-react';
 import { useCart } from '../../context/CartContext.tsx';
 
 interface HeroBannerProps {
@@ -18,7 +18,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
 
   if (!featuredProduct) return null;
 
-  const handleMine = (e: React.MouseEvent) => {
+  const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!featuredProduct.isSoldOut) {
       addToCart(featuredProduct);
@@ -128,11 +128,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
                 {!featuredProduct.isSoldOut && (
                   <button
                     type="button"
-                    onClick={handleMine}
-                    className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-brand-gradient text-black text-xs font-heading font-bold shadow-sm hover:brightness-105 active:scale-95 transition-all"
+                    onClick={handleAddToCart}
+                    className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-zinc-950 text-white text-xs font-mono font-bold shadow-xs hover:bg-zinc-800 active:scale-95 transition-all"
                   >
-                    <Zap className="w-4 h-4 fill-black" />
-                    <span>Mine Piece</span>
+                    <ShoppingBag className="w-4 h-4 text-zinc-300" />
+                    <span>Add to Cart</span>
                   </button>
                 )}
               </div>

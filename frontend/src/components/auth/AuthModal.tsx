@@ -3,6 +3,7 @@ import { Modal } from '../common/Modal.tsx';
 import { useAuth } from '../../context/AuthContext.tsx';
 import { ShieldCheck, Sparkles, Lock, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from '../common/Button.tsx';
+import { PRMonogramLogo } from '../common/PRMonogramLogo.tsx';
 
 export const AuthModal: React.FC = () => {
   const { isAuthModalOpen, setIsAuthModalOpen, loginWithGoogle, loginWithFacebook, loginAsAdmin } = useAuth();
@@ -57,10 +58,8 @@ export const AuthModal: React.FC = () => {
       }}
       maxWidth="md"
       title={
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-xl bg-zinc-950 text-white flex items-center justify-center text-xs font-heading font-bold shadow-sm">
-            P&amp;R
-          </div>
+        <div className="flex items-center gap-2.5">
+          <PRMonogramLogo size="sm" showSubtitle={false} />
           <span className="font-heading font-bold text-base text-zinc-950">
             {isAdminMode ? 'Curator Vault Access' : activeTab === 'signin' ? 'Welcome Back to P&R' : 'Create P&R Account'}
           </span>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '../components/common/Button.tsx';
+import { Button } from '../../components/common/Button.tsx';
 import { AlertCircle } from 'lucide-react';
 
 export const NotFoundPage: React.FC = () => {

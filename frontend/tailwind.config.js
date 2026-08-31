@@ -9,10 +9,14 @@ export default {
     extend: {
       colors: {
         brand: {
+          yellow: '#FBBF24',
           amber: '#F59E0B',
-          orange: '#D97706',
-          gold: '#FBBF24',
-          darkGold: '#B45309',
+          sunset: '#F97316',
+          coral: '#EA580C',
+          darkCoral: '#C2410C',
+          peach: '#FFF7ED',
+          peachLight: '#FFEDD5',
+          peachBorder: '#FED7AA',
         },
         obsidian: {
           base: '#0A0A0C',
@@ -36,11 +40,14 @@ export default {
       boxShadow: {
         'cyber-sm': '0 1px 3px rgba(0, 0, 0, 0.6)',
         'cyber-md': '0 4px 20px -2px rgba(0, 0, 0, 0.8)',
-        'amber-glow': '0 0 25px rgba(245, 158, 11, 0.25)',
+        'amber-glow': '0 0 25px rgba(249, 115, 22, 0.3)',
+        'sunset-glow': '0 4px 20px rgba(249, 115, 22, 0.25)',
         'dock': '0 -4px 30px rgba(0, 0, 0, 0.9)',
       },
       backgroundImage: {
-        'brand-gradient': 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+        'brand-gradient': 'linear-gradient(135deg, #FBBF24 0%, #F97316 50%, #EA580C 100%)',
+        'sunset-gradient': 'linear-gradient(135deg, #FBBF24 0%, #F97316 50%, #EA580C 100%)',
+        'sunset-soft': 'linear-gradient(135deg, #FEF3C7 0%, #FFEDD5 50%, #FFF7ED 100%)',
         'glass-gradient': 'linear-gradient(180deg, rgba(24, 24, 27, 0.7) 0%, rgba(18, 18, 20, 0.95) 100%)',
       },
       keyframes: {

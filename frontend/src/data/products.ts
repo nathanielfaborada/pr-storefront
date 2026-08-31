@@ -28,8 +28,8 @@ export const INITIAL_PRODUCTS: Item[] = [
     },
     images: [
       "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80",
       "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80",
     ],
     fitpicUrls: [
       "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80"
@@ -104,8 +104,8 @@ export const INITIAL_PRODUCTS: Item[] = [
       originCountry: "Made in South Korea",
     },
     images: [
+      "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=800&q=80",
       "https://images.unsplash.com/photo-1542272604-780c96856592?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&w=800&q=80",
     ],
     isSoldOut: false,
     isReserved: false,
@@ -175,8 +175,8 @@ export const INITIAL_PRODUCTS: Item[] = [
       originCountry: "Made in Japan",
     },
     images: [
+      "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=800&q=80",
       "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=800&q=80",
     ],
     isSoldOut: false,
     isReserved: false,
@@ -211,7 +211,7 @@ export const INITIAL_PRODUCTS: Item[] = [
     },
     images: [
       "https://images.unsplash.com/photo-1582552938357-32b906df40cb?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1542272604-780c96856592?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&w=800&q=80",
     ],
     isSoldOut: false,
     isReserved: false,
@@ -246,8 +246,8 @@ export const INITIAL_PRODUCTS: Item[] = [
       originCountry: "Made in Portugal",
     },
     images: [
-      "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=800&q=80",
       "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=800&q=80",
     ],
     isSoldOut: false,
     isReserved: false,
@@ -281,8 +281,8 @@ export const INITIAL_PRODUCTS: Item[] = [
       originCountry: "Made in Japan",
     },
     images: [
+      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80",
       "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1575428652377-a2d80e2277fc?auto=format&fit=crop&w=800&q=80",
     ],
     isSoldOut: false,
     isReserved: false,
