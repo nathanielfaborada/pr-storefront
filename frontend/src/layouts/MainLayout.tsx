@@ -17,7 +17,6 @@ import { AlertCircle, X } from 'lucide-react';
 export const MainLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { expiredAlertItem, dismissExpiredAlert } = useCart();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isCustomerMenuOpen, setIsCustomerMenuOpen] = useState(false);
   const [products] = useState<Item[]>(INITIAL_PRODUCTS);
@@ -57,22 +56,6 @@ export const MainLayout: React.FC = () => {
         isOpen={isCustomerMenuOpen}
         onClose={() => setIsCustomerMenuOpen(false)}
       />
-
-      {/* Expired Hold Floating Alert */}
-      {expiredAlertItem && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-200 max-w-md w-[90%] font-mono">
-          <AlertCircle className="w-5 h-5 text-red-500 shrink-0" />
-          <p className="text-xs leading-tight">
-            Your 15-minute hold on <strong>"{expiredAlertItem}"</strong> has expired and returned to the racks.
-          </p>
-          <button
-            onClick={dismissExpiredAlert}
-            className="p-1 hover:bg-red-100 rounded-lg shrink-0 transition-colors"
-          >
-            <X className="w-4 h-4 text-red-600" />
-          </button>
-        </div>
-      )}
 
       {/* 3. Page Content */}
       <main className="flex-1">

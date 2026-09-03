@@ -156,3 +156,29 @@ export interface OrderPayload {
   fulfillmentStatus: OrderFulfillmentStatus;
   trackingPipeline: TrackingStep[];
 }
+
+export type SupplyCategory = 'packaging' | 'equipment';
+
+export interface SupplyItem {
+  id: string;
+  name: string;
+  category: SupplyCategory;
+  quantity: number;
+  unit: 'pcs' | 'rolls' | 'packs' | 'bottles' | 'sheets' | 'units';
+  unitCostPhp: number;
+  lowStockThreshold: number;
+  supplierOrLocation?: string;
+  lastRestockedAt?: string;
+  notes?: string;
+}
+
+export interface StudioRack {
+  id: string;
+  rackCode: string;           // e.g. "RACK-A"
+  rackName: string;           // e.g. "Main Boxy Tees Rack"
+  categoryTag: string;        // e.g. "boxy-tees"
+  capacity: number;           // max pieces e.g. 30
+  currentPiecesCount: number; // e.g. 18
+  locationNotes: string;      // e.g. "Studio Left Wall, near Steamer"
+}
+

@@ -14,34 +14,46 @@ interface ChatContextType {
   markAllAsRead: () => void;
 }
 
+const CHAT_STORAGE_KEY = 'pr_chat_messages_v1';
+
+const INITIAL_MESSAGES: ChatMessage[] = [
+  {
+    id: "msg-welcome-001",
+    sender: "seller",
+    text: "Peace! Welcome to P&R Vintage & Streetwear Archive. 🔥 All pieces are 1-of-1 authentic vintage. Let me know if you need sizing advice, pit-to-pit fit comparisons, or natural light photos!",
+    timestamp: "Just now",
+    isRead: false,
+  }
+];
+
+const getStoredMessages = (): ChatMessage[] => {
+  const saved = localStorage.getItem(CHAT_STORAGE_KEY);
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    } catch {
+      // Fallback
+    }
+  }
+  return INITIAL_MESSAGES;
+};
+
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: "msg-welcome-001",
-      sender: "seller",
-      text: "Peace! Welcome to P&R Vintage & Streetwear Archive. 🔥 All pieces are 1-of-1 authentic vintage. Let me know if you need sizing advice, pit-to-pit fit comparisons, or natural light photos!",
-      timestamp: "Just now",
-      isRead: false,
-    }
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>(getStoredMessages);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [attachedProduct, setAttachedProduct] = useState<AttachedProductSummary | null>(null);
   const [isSellerTyping, setIsSellerTyping] = useState(false);
   const [unreadCount, setUnreadCount] = useState(1);
 
-  // Fetch initial message history from backend if available
+  // Sync to localStorage
   useEffect(() => {
-    fetch('/api/chat/messages')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success && data.data.length > 0) {
-          setMessages(data.data);
-        }
-      })
-      .catch(() => {});
-  }, []);
+    localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
+  }, [messages]);
 
   const openChatWithProduct = (item: Item) => {
     setAttachedProduct({
@@ -78,43 +90,21 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setMessages(prev => [...prev, userMsg]);
     setIsSellerTyping(true);
 
-    try {
-      // Send to backend
-      const res = await fetch('/api/chat/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          text,
-          attachedProduct,
-          imageAttachmentUrl,
-        }),
-      });
-      const data = await res.json();
-      
-      setTimeout(() => {
-        setIsSellerTyping(false);
-        if (data.success && data.sellerReply) {
-          setMessages(prev => [...prev, data.sellerReply]);
-          if (!isChatOpen) setUnreadCount(c => c + 1);
-        }
-      }, 1200);
-    } catch {
-      // Fallback local simulated reply if server is offline
-      setTimeout(() => {
-        setIsSellerTyping(false);
-        const fallbackReply: ChatMessage = {
-          id: `msg-reply-${Date.now()}`,
-          sender: 'seller',
-          text: attachedProduct 
-            ? `Got your inquiry regarding "${attachedProduct.title}". The piece is in top condition with exact measurements shown on the card. Let me know if you need it dispatched today!`
-            : "Thanks for messaging P&R! All items on our drop page are verified 1-of-1 authentic vintage. Ready to dispatch!",
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          isRead: isChatOpen,
-        };
-        setMessages(prev => [...prev, fallbackReply]);
-        if (!isChatOpen) setUnreadCount(c => c + 1);
-      }, 1200);
-    }
+    // Natural simulated seller response (100% localStorage, zero HTTP fetch errors)
+    setTimeout(() => {
+      setIsSellerTyping(false);
+      const sellerReply: ChatMessage = {
+        id: `msg-reply-${Date.now()}`,
+        sender: 'seller',
+        text: attachedProduct 
+          ? `Got your inquiry regarding "${attachedProduct.title}". The piece is in top condition with exact measurements shown on the card. Let me know if you need it dispatched today!`
+          : "Thanks for messaging P&R! All items on our drop page are verified 1-of-1 authentic vintage. Ready to dispatch!",
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        isRead: isChatOpen,
+      };
+      setMessages(prev => [...prev, sellerReply]);
+      if (!isChatOpen) setUnreadCount(c => c + 1);
+    }, 1000);
   };
 
   return (
@@ -139,6 +129,8 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
 export const useChat = () => {
   const context = useContext(ChatContext);
-  if (!context) throw new Error('useChat must be used within ChatProvider');
+  if (!context) {
+    throw new Error('useChat must be used within a ChatProvider');
+  }
   return context;
 };

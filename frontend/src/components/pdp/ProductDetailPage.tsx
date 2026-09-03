@@ -107,8 +107,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 <span>100% Curated 1-of-1 Authenticity</span>
               </div>
               <div className="flex items-center gap-2.5 p-3 rounded-2xl bg-zinc-50 border border-zinc-200 text-xs font-mono text-zinc-700">
-                <RefreshCw className="w-4 h-4 text-amber-600 shrink-0" />
-                <span>15-Min Bag Lock Engine</span>
+                <RefreshCw className="w-4 h-4 text-orange-600 shrink-0" />
+                <span>Hand-Measured Fits</span>
               </div>
               <div className="flex items-center gap-2.5 p-3 rounded-2xl bg-zinc-50 border border-zinc-200 text-xs font-mono text-zinc-700">
                 <Truck className="w-4 h-4 text-zinc-900 shrink-0" />

@@ -1,21 +1,15 @@
 {
-  "name": "pr-storefront-monolith",
+  "name": "pr-storefront",
   "version": "1.0.0",
   "private": true,
-  "description": "P&R Thrift & Style Collection Monolith - Frontend & Backend Workspaces",
+  "description": "P&R Thrift & Style Collection - Frontend Storefront",
   "workspaces": [
-    "frontend",
-    "backend"
+    "frontend"
   ],
   "scripts": {
-    "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"cyan,magenta\" \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\"",
-    "build": "npm run build --workspace=backend && npm run build --workspace=frontend",
-    "start": "npm run start --workspace=backend",
-    "dev:frontend": "npm run dev --workspace=frontend",
-    "dev:backend": "npm run dev --workspace=backend"
-  },
-  "devDependencies": {
-    "concurrently": "^9.1.2"
+    "dev": "npm run dev --workspace=frontend",
+    "build": "npm run build --workspace=frontend",
+    "preview": "npm run preview --workspace=frontend"
   },
   "keywords": [
     "vintage",
@@ -23,8 +17,7 @@
     "streetwear",
     "storefront",
     "react",
-    "vite",
-    "express"
+    "vite"
   ],
   "author": "P&R Development Team",
   "license": "MIT"

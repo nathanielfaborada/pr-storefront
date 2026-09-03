@@ -32,41 +32,42 @@ export const ProductCard: React.FC<ProductCardProps> = ({ item, onClick }) => {
   return (
     <div
       onClick={onClick}
-      className={`group relative bg-white rounded-xl overflow-hidden border border-zinc-200 hover:border-orange-500 hover:shadow-lg hover:shadow-orange-500/10 transition-all duration-200 flex flex-col cursor-pointer ${
-        item.isSoldOut ? 'opacity-75' : ''
+      className={`group relative bg-white rounded-2xl overflow-hidden border border-zinc-200 hover:border-orange-500 hover:shadow-xl hover:shadow-orange-500/10 transition-all duration-300 flex flex-col h-full justify-between cursor-pointer ${
+        item.isSoldOut ? 'opacity-80' : ''
       }`}
     >
-      {/* Standardized Media Image Container (4:5 Aspect Ratio) */}
-      <div className="relative w-full aspect-[4/5] bg-orange-50/30 overflow-hidden shrink-0">
+      {/* 1. Standardized Media Image Container (Fixed Aspect Ratio 4:5) */}
+      <div className="relative w-full aspect-[4/5] bg-zinc-100 overflow-hidden shrink-0 flex items-center justify-center">
         <ImageWithFallback
           src={item.images[0]}
           alt={item.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
         />
 
-        {/* Top Badges */}
-        <div className="absolute top-2.5 left-2.5 flex flex-col gap-1.5 z-10 items-start">
-          <Badge variant="gold">
-            {item.stockQuantity && item.stockQuantity > 1 ? `${item.stockQuantity} Pcs Available` : '1-of-1 Curated'}
+        {/* Top-Left: Stock / Curated Badge */}
+        <div className="absolute top-3 left-3 z-10">
+          <Badge variant={item.isSoldOut ? 'sold' : 'gold'}>
+            {item.isSoldOut
+              ? 'Sold Out'
+              : item.stockQuantity && item.stockQuantity > 1
+              ? `${item.stockQuantity} pcs left`
+              : '1 of 1 Left'}
           </Badge>
-          {item.isReserved && !item.isSoldOut && (
-            <Badge variant="hold">In Cart Hold</Badge>
-          )}
         </div>
 
-        {/* Silhouette / GSM Tag (Top-Right) */}
-        <div className="absolute top-2.5 right-2.5 z-10 flex flex-col items-end gap-1">
-          {item.condition.fabricGsm && (
-            <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-zinc-950/85 backdrop-blur-md text-white shadow-sm border border-zinc-800">
+        {/* Top-Right: Fabric GSM Badge */}
+        {item.condition.fabricGsm && (
+          <div className="absolute top-3 right-3 z-10">
+            <span className="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold bg-zinc-950/85 backdrop-blur-md text-white shadow-sm border border-zinc-800">
               {item.condition.fabricGsm} GSM
             </span>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Wishlist Button */}
         <button
           onClick={handleWishlist}
-          className="absolute bottom-2.5 right-2.5 z-10 p-2 rounded-lg bg-white/95 backdrop-blur-md text-zinc-600 hover:text-orange-600 border border-zinc-200 transition-all active:scale-95 shadow-sm"
+          className="absolute bottom-3 right-3 z-10 p-2 rounded-xl bg-white/95 backdrop-blur-md text-zinc-600 hover:text-orange-600 border border-zinc-200 transition-all active:scale-95 shadow-sm"
           title={wishlisted ? 'Remove from watchlist' : 'Save to watchlist'}
         >
           <Heart
@@ -86,9 +87,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ item, onClick }) => {
         )}
       </div>
 
-      {/* Card Details Container with responsive padding */}
-      <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between space-y-2 sm:space-y-3">
-        <div className="space-y-1 sm:space-y-1.5">
+      {/* 2. Standardized Card Details Container */}
+      <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between space-y-3">
+        <div className="space-y-1.5">
           {/* Brand & Tag Size */}
           <div className="flex items-center justify-between text-xs font-mono">
             <span className="font-bold tracking-wider uppercase text-orange-700 text-[10px]">
@@ -99,18 +100,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({ item, onClick }) => {
             </span>
           </div>
 
-          {/* Garment Title - Single Line Clamp with no clipping */}
-          <h3 className="font-heading font-bold text-xs sm:text-sm text-zinc-900 group-hover:text-orange-600 transition-colors line-clamp-1 leading-snug">
+          {/* Garment Title - Fixed 2-Line Height for Perfect Grid Alignment */}
+          <h3 className="font-heading font-bold text-xs sm:text-sm text-zinc-900 group-hover:text-orange-600 transition-colors line-clamp-2 h-9 leading-snug">
             {item.title}
           </h3>
 
           {/* Garment Description - 2 Lines Clamp */}
-          <p className="text-[11px] sm:text-xs text-zinc-500 font-mono line-clamp-2 leading-relaxed">
+          <p className="text-[11px] sm:text-xs text-zinc-500 font-mono line-clamp-2 h-8 leading-relaxed">
             {item.description}
           </p>
 
           {/* Silhouette & Pit-to-Pit Quick Specs */}
-          <div className="flex items-center gap-1.5 sm:gap-2 pt-1.5 sm:pt-2 border-t border-zinc-100 text-[10px] sm:text-[11px] text-zinc-600 font-mono">
+          <div className="flex items-center gap-1.5 sm:gap-2 pt-2 border-t border-zinc-100 text-[10px] sm:text-[11px] text-zinc-600 font-mono">
             <span className="truncate text-zinc-700 font-medium">
               {item.silhouette}
             </span>
@@ -126,8 +127,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ item, onClick }) => {
           </div>
         </div>
 
-        {/* Price & Mine Action */}
-        <div className="pt-2 sm:pt-3 border-t border-zinc-100 flex items-center justify-between gap-1.5 sm:gap-2">
+        {/* Price & Action Toolbar at Uniform Baseline */}
+        <div className="pt-2 sm:pt-3 border-t border-zinc-100 flex items-center justify-between gap-1.5 sm:gap-2 mt-auto">
           <div>
             <span className="font-mono font-bold text-sm sm:text-base text-zinc-950 block leading-tight">
               {item.hasCustomSizePricing && item.minPricePhp && item.maxPricePhp && item.minPricePhp !== item.maxPricePhp
@@ -141,21 +142,22 @@ export const ProductCard: React.FC<ProductCardProps> = ({ item, onClick }) => {
             )}
           </div>
 
-          {!item.isSoldOut ? (
-            <button
-              onClick={handleAddToCart}
-              className="flex items-center gap-1 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-white text-[11px] sm:text-xs font-mono font-bold shadow-xs transition-all active:scale-95 shrink-0"
-            >
-              <ShoppingBag className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-zinc-300" />
-              <span>+ Cart</span>
-            </button>
-          ) : (
-            <span className="text-[9px] sm:text-[10px] font-mono font-bold text-zinc-400 uppercase">
-              Sold Out
-            </span>
-          )}
+          <button
+            onClick={handleAddToCart}
+            disabled={item.isSoldOut}
+            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 ${
+              item.isSoldOut
+                ? 'bg-zinc-200 text-zinc-400 cursor-not-allowed'
+                : 'bg-zinc-950 hover:bg-orange-600 text-white shadow-sm active:scale-95'
+            }`}
+          >
+            <ShoppingBag className="w-3.5 h-3.5" />
+            <span>{item.isSoldOut ? 'Claimed' : 'Mine'}</span>
+          </button>
         </div>
       </div>
     </div>
   );
 };
+
+export default ProductCard;

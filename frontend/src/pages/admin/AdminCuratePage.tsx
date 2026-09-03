@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { productService } from '../../services/productService.ts';
+import { useToast } from '../../context/ToastContext.tsx';
 import { Item, CategoryType } from '../../types/index.ts';
 import { formatPhp } from '../../utils/index.ts';
 import { PRMonogramLogo } from '../../components/common/PRMonogramLogo.tsx';
@@ -28,6 +29,7 @@ import { Button } from '../../components/common/Button.tsx';
 export const AdminCuratePage: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
+  const toast = useToast();
   const isEditing = Boolean(id);
 
   const imageFileInputRef = useRef<HTMLInputElement>(null);
@@ -323,7 +325,7 @@ export const AdminCuratePage: React.FC = () => {
       maxPricePhp: maxFinalPrice,
       isOneOfOne: is1of1,
       recommendedFit: formData.recommendedFit,
-      silhouette: formData.silhouette,
+      silhouette: formData.silhouette as any,
       measurements: {
         pitToPitInches: Number(formData.pitToPitInches),
         lengthInches: Number(formData.lengthInches),
@@ -350,14 +352,16 @@ export const AdminCuratePage: React.FC = () => {
 
     if (isEditing) {
       productService.update(piecePayload.id, piecePayload);
+      toast.success(`Piece "${piecePayload.title}" updated successfully.`, 'Drop Updated');
     } else {
       productService.create(piecePayload);
+      toast.success(`Piece "${piecePayload.title}" successfully launched to Drop 08!`, 'Drop Created');
     }
 
     setIsSavedSuccess(true);
     setTimeout(() => {
-      navigate('/admin');
-    }, 600);
+      navigate('/admin/products');
+    }, 500);
   };
 
   if (isLoading) {

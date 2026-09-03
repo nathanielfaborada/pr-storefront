@@ -77,7 +77,6 @@ export const OrderStatusPage: React.FC = () => {
 
       {/* Visual Tracking Pipeline */}
       <VisualTrackingPipeline
-        currentStatus={order.fulfillmentStatus}
         pipeline={order.trackingPipeline}
       />
 

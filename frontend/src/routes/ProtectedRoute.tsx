@@ -1,6 +1,6 @@
 import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.tsx';
+import { AdminUnauthorizedPage } from '../pages/admin/AdminUnauthorizedPage.tsx';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -12,16 +12,13 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   requireAdmin = false,
 }) => {
   const { isAuthenticated, isAdmin } = useAuth();
-  const location = useLocation();
 
-  if (!isAuthenticated) {
-    // Redirect to login or home with return location
-    return <Navigate to="/admin/login" state={{ from: location }} replace />;
-  }
-
-  if (requireAdmin && !isAdmin) {
-    return <Navigate to="/" replace />;
+  // If user is not authenticated or lacks required admin rights, block with Unauthorized Page
+  if (!isAuthenticated || (requireAdmin && !isAdmin)) {
+    return <AdminUnauthorizedPage />;
   }
 
   return <>{children}</>;
 };
+
+export default ProtectedRoute;

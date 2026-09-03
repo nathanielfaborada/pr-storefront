@@ -27,10 +27,10 @@ export const OrderConfirmation: React.FC<OrderConfirmationProps> = ({
         </div>
 
         <h1 className="font-heading text-3xl sm:text-4xl font-extrabold text-zinc-950 tracking-tight">
-          Mine Secured! 🏷️
+          Order Confirmed! 📦
         </h1>
         <p className="text-xs sm:text-sm text-zinc-600 max-w-md mx-auto leading-relaxed font-mono">
-          Your 1-of-1 streetwear drop has been secured under Order Reference{' '}
+          Your curated streetwear order has been secured under Order Reference{' '}
           <strong className="text-amber-700">{order.orderId}</strong>.
         </p>
 

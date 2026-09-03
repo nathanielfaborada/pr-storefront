@@ -49,8 +49,8 @@ export const AccountPage: React.FC = () => {
       <div className="bg-zinc-50 p-6 rounded-3xl border border-zinc-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 rounded-2xl bg-zinc-950 text-white flex items-center justify-center font-heading font-extrabold text-xl shadow-md border border-amber-500/30">
-            {user.avatar ? (
-              <img src={user.avatar} alt={user.name} className="w-full h-full rounded-2xl object-cover" />
+            {(user as any).avatar ? (
+              <img src={(user as any).avatar} alt={user.name} className="w-full h-full rounded-2xl object-cover" />
             ) : (
               user.name.charAt(0).toUpperCase()
             )}

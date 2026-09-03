@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { ArrowRight, ArrowLeft, Lock } from 'lucide-react';
 import { useCart } from '../../context/CartContext.tsx';
 import { ShippingAddress, PaymentMethod, OrderPayload } from '../../types/index.ts';
+import { orderService } from '../../services/orderService.ts';
 import { formatPhp } from '../../utils/index.ts';
 import { Modal } from '../common/Modal.tsx';
 import { Button } from '../common/Button.tsx';
-import { CountdownTimer } from '../common/CountdownTimer.tsx';
+import { useToast } from '../../context/ToastContext.tsx';
 import { ShippingForm } from './ShippingForm.tsx';
 import { PaymentSelector } from './PaymentSelector.tsx';
 import { QRPaymentCard } from './QRPaymentCard.tsx';
@@ -23,7 +24,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   onClose,
   onOrderCompleted,
 }) => {
-  const { cart, subtotalPhp, shippingFeePhp, totalPhp, clearCart, secondsRemaining } = useCart();
+  const { cart, subtotalPhp, shippingFeePhp, totalPhp, clearCart } = useCart();
+  const toast = useToast();
 
   const [step, setStep] = useState<1 | 2>(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,7 +50,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault();
     if (!shippingAddress.fullName || !shippingAddress.phoneNumber || !shippingAddress.city || !shippingAddress.streetAddress) {
-      alert('Please complete all required shipping fields.');
+      toast.warning('Please complete all required shipping fields before proceeding.', 'Missing Information');
       return;
     }
     setStep(2);
@@ -58,54 +60,19 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     e.preventDefault();
 
     if (!policyAccepted) {
-      alert('Please confirm the 1-of-1 streetwear policy checkbox.');
+      toast.warning('Please confirm the 1-of-1 streetwear policy checkbox.', 'Policy Check');
       return;
     }
 
     if (paymentMethod !== 'cod' && !referenceNumber) {
-      alert('Please enter your 13-digit GCash / Maya reference number.');
+      toast.warning('Please enter your 13-digit GCash / Maya reference number.', 'Payment Proof Required');
       return;
     }
 
     setIsSubmitting(true);
 
-    const orderPayload = {
-      items: cart.map(ci => ci.item),
-      shippingAddress,
-      paymentDetails: {
-        method: paymentMethod,
-        referenceNumber: referenceNumber || undefined,
-        receiptImageUrl: receiptUrl || undefined,
-        paidAmountPhp: totalPhp,
-      },
-      subtotalPhp,
-      shippingFeePhp,
-      discountPhp: 0,
-      totalAmountPhp: totalPhp,
-      vintagePolicyAccepted: true,
-    };
-
     try {
-      const res = await fetch('/api/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderPayload),
-      });
-      const data = await res.json();
-
-      if (data.success && data.data) {
-        clearCart();
-        onOrderCompleted(data.data);
-        onClose();
-      } else {
-        throw new Error(data.message || 'Order failed');
-      }
-    } catch {
-      // Local fallback mock order generation
-      const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-      const fallbackOrder: OrderPayload = {
-        orderId: `PR-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}-${randomSuffix}`,
-        waybillNumber: `WB-JNT-${Math.floor(10000000 + Math.random() * 90000000)}-MNL`,
+      const createdOrder = await orderService.createOrder({
         items: cart.map(ci => ci.item),
         shippingAddress,
         paymentDetails: {
@@ -113,54 +80,20 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
           referenceNumber: referenceNumber || '100982348123',
           receiptImageUrl: receiptUrl || undefined,
           paidAmountPhp: totalPhp,
-          submittedAt: new Date().toISOString(),
         },
         subtotalPhp,
         shippingFeePhp,
         discountPhp: 0,
         totalAmountPhp: totalPhp,
         vintagePolicyAccepted: true,
-        createdAt: new Date().toISOString(),
-        fulfillmentStatus: 'payment_verified',
-        trackingPipeline: [
-          {
-            stepNumber: 1,
-            label: paymentMethod === 'cod' ? 'Order Placed (COD)' : 'Payment Proof Submitted',
-            status: 'completed',
-            timestamp: 'Just now',
-            description: paymentMethod === 'cod' ? 'COD delivery requested.' : `Reference #${referenceNumber} received for vault audit.`,
-          },
-          {
-            stepNumber: 2,
-            label: 'Payment Verified by P&R Vault',
-            status: 'completed',
-            timestamp: 'Just now',
-            description: 'Item cleared for shipment.',
-          },
-          {
-            stepNumber: 3,
-            label: 'Sanitized, Tagged & Packed',
-            status: 'current',
-            description: 'Garment sanitized and packed in cyber dustbag.',
-          },
-          {
-            stepNumber: 4,
-            label: 'Handed Over to Courier',
-            status: 'upcoming',
-            description: 'Express pickup by J&T Express / Lalamove hub.',
-          },
-          {
-            stepNumber: 5,
-            label: 'Out for Delivery',
-            status: 'upcoming',
-            description: 'Estimated arrival in 1-2 business days.',
-          },
-        ],
-      };
+      });
 
       clearCart();
-      onOrderCompleted(fallbackOrder);
+      toast.success(`Order ${createdOrder.orderId} placed successfully!`, 'Order Confirmed');
+      onOrderCompleted(createdOrder);
       onClose();
+    } catch {
+      toast.error('Failed to place order. Please try again.', 'Order Error');
     } finally {
       setIsSubmitting(false);
     }
@@ -184,12 +117,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
       }
     >
       <div className="space-y-6">
-        
-        {/* Cart Hold Timer Reminder */}
-        {secondsRemaining > 0 && (
-          <CountdownTimer seconds={secondsRemaining} showProgressBar={false} />
-        )}
-
         {/* Step 1: Shipping Address */}
         {step === 1 && (
           <form onSubmit={handleNextStep} className="space-y-6">

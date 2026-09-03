@@ -54,6 +54,38 @@ class ApiClient {
     }
   }
 
+  async put<T>(endpoint: string, body: any): Promise<ApiResponse<T>> {
+    try {
+      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+        method: 'PUT',
+        headers: this.getAuthHeaders(),
+        body: JSON.stringify(body),
+      });
+      return await response.json();
+    } catch (err: any) {
+      return {
+        success: false,
+        error: err.message || 'Network request failed',
+      };
+    }
+  }
+
+  async patch<T>(endpoint: string, body: any): Promise<ApiResponse<T>> {
+    try {
+      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+        method: 'PATCH',
+        headers: this.getAuthHeaders(),
+        body: JSON.stringify(body),
+      });
+      return await response.json();
+    } catch (err: any) {
+      return {
+        success: false,
+        error: err.message || 'Network request failed',
+      };
+    }
+  }
+
   async delete<T>(endpoint: string): Promise<ApiResponse<T>> {
     try {
       const response = await fetch(`${this.baseUrl}${endpoint}`, {

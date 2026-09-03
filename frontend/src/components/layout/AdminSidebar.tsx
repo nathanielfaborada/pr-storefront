@@ -1,22 +1,32 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext.tsx';
+import { useToast } from '../../context/ToastContext.tsx';
 import { PRMonogramLogo } from '../common/PRMonogramLogo.tsx';
 import {
   Shirt,
   Receipt,
   Truck,
-  Clock,
-  X
+  Boxes,
+  MessageSquare,
+  User,
+  ExternalLink,
+  LogOut,
+  X,
+  MapPin,
+  ShieldCheck
 } from 'lucide-react';
 
 interface AdminSidebarProps {
   isOpen?: boolean;
   onClose?: () => void;
-  activeTab?: 'racks' | 'payments' | 'dispatch' | 'holds';
-  onTabChange?: (tab: 'racks' | 'payments' | 'dispatch' | 'holds') => void;
+  activeTab?: 'racks' | 'payments' | 'dispatch' | 'supplies' | 'chats';
+  onTabChange?: (tab: 'racks' | 'payments' | 'dispatch' | 'supplies' | 'chats') => void;
+  onOpenProfileModal?: () => void;
   racksCount?: number;
   ordersCount?: number;
-  holdsCount?: number;
+  suppliesCount?: number;
+  unreadChatsCount?: number;
 }
 
 export const AdminSidebar: React.FC<AdminSidebarProps> = ({
@@ -24,26 +34,40 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
   onClose,
   activeTab = 'racks',
   onTabChange,
+  onOpenProfileModal,
   racksCount = 0,
   ordersCount = 0,
-  holdsCount = 0,
+  suppliesCount = 0,
+  unreadChatsCount = 1,
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, logout } = useAuth();
+  const toast = useToast();
 
   const isCurateRoute = location.pathname.startsWith('/admin/drops');
 
-  const handleNav = (tab: 'racks' | 'payments' | 'dispatch' | 'holds') => {
+  const handleNav = (tab: 'racks' | 'payments' | 'dispatch' | 'supplies' | 'chats') => {
     const routeMap: Record<string, string> = {
       racks: '/admin/products',
       payments: '/admin/orders',
       dispatch: '/admin/dispatch',
-      holds: '/admin/holds',
+      supplies: '/admin/supplies',
+      chats: '/admin/chats',
     };
     navigate(routeMap[tab] || '/admin');
     if (onTabChange) {
       onTabChange(tab);
     }
+    if (onClose) {
+      onClose();
+    }
+  };
+
+  const handleSignOut = () => {
+    logout();
+    toast.info('Signed out from Seller Studio.', 'Session Ended');
+    navigate('/admin/login', { replace: true });
     if (onClose) {
       onClose();
     }
@@ -69,10 +93,16 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       badge: ordersCount > 0 ? `${ordersCount}` : undefined,
     },
     {
-      id: 'holds' as const,
-      label: 'Active Holds',
-      icon: Clock,
-      badge: holdsCount > 0 ? `${holdsCount}` : undefined,
+      id: 'supplies' as const,
+      label: 'Studio Supplies & Assets',
+      icon: Boxes,
+      badge: suppliesCount > 0 ? `${suppliesCount}` : undefined,
+    },
+    {
+      id: 'chats' as const,
+      label: 'Customer Chats',
+      icon: MessageSquare,
+      badge: unreadChatsCount > 0 ? `${unreadChatsCount}` : undefined,
     },
   ];
 
@@ -109,7 +139,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           {onClose && (
             <button
               onClick={onClose}
-              className="p-1.5 text-zinc-400 hover:text-zinc-900 lg:hidden rounded-lg hover:bg-zinc-100 transition-colors"
+              className="p-1.5 text-zinc-400 hover:text-zinc-900 lg:hidden rounded-lg hover:bg-zinc-100 transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -118,7 +148,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
 
         {/* 2. Focused Navigation Menu */}
         <div className="flex-1 min-h-0 overflow-y-auto p-3 space-y-1">
-          <nav className="space-y-1">
+          <nav className="space-y-1 font-mono">
             {navItems.map(item => {
               const Icon = item.icon;
               const isActive = !isCurateRoute && activeTab === item.id;
@@ -126,7 +156,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => handleNav(item.id)}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
                     isActive
                       ? 'bg-orange-50 text-orange-600 font-bold'
                       : 'text-zinc-600 hover:text-zinc-950 hover:bg-zinc-100'
@@ -150,14 +180,82 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           </nav>
         </div>
 
-        {/* 3. Footer Studio Version */}
-        <div className="p-3 border-t border-zinc-100 bg-zinc-50/50 text-center">
-          <span className="text-[10px] font-mono text-zinc-400">
-            P&amp;R Archival Studio · v2.4
-          </span>
+        {/* 3. Curator Profile & Settings Footer */}
+        <div className="p-3 border-t border-zinc-200 bg-zinc-50/70 space-y-2.5 font-mono">
+          
+          {/* User Profile Card */}
+          <div className="bg-white border border-zinc-200 rounded-2xl p-2.5 shadow-2xs">
+            <div className="flex items-center gap-2.5">
+              <div className="relative shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                  {user?.name ? user.name.charAt(0).toUpperCase() : 'N'}
+                </div>
+                <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white" />
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between gap-1">
+                  <h4 className="font-bold text-xs text-zinc-950 truncate leading-tight">
+                    {user?.name || 'Nathaniel Faborada (Curator)'}
+                  </h4>
+                </div>
+                <p className="text-[10px] text-zinc-400 truncate mt-0.5">
+                  {user?.email || 'nathaniel.faborada@gmail.com'}
+                </p>
+                <div className="flex items-center gap-1 mt-1">
+                  <span className="text-[9px] font-bold text-orange-700 bg-orange-50 border border-orange-200 px-1.5 py-0.2 rounded uppercase">
+                    Pandi Hub
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Action Links */}
+          <div className="space-y-0.5 text-xs">
+            <button
+              onClick={() => {
+                if (onOpenProfileModal) onOpenProfileModal();
+                if (onClose) onClose();
+              }}
+              className="w-full px-2.5 py-1.5 text-left rounded-xl hover:bg-white text-zinc-700 hover:text-zinc-950 flex items-center gap-2 transition-colors cursor-pointer"
+            >
+              <User className="w-3.5 h-3.5 text-orange-600" />
+              <span className="font-medium text-[11px]">Admin Profile &amp; Settings</span>
+            </button>
+
+            <button
+              onClick={() => {
+                navigate('/');
+                if (onClose) onClose();
+              }}
+              className="w-full px-2.5 py-1.5 text-left rounded-xl hover:bg-white text-zinc-700 hover:text-zinc-950 flex items-center gap-2 transition-colors cursor-pointer"
+            >
+              <ExternalLink className="w-3.5 h-3.5 text-zinc-400" />
+              <span className="font-medium text-[11px]">View Storefront</span>
+            </button>
+
+            <button
+              onClick={handleSignOut}
+              className="w-full px-2.5 py-1.5 text-left rounded-xl hover:bg-red-50 text-red-600 font-semibold flex items-center gap-2 transition-colors cursor-pointer"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="text-[11px]">Sign Out</span>
+            </button>
+          </div>
+
+          {/* Hub Location Tag */}
+          <div className="text-center pt-0.5 border-t border-zinc-200/60">
+            <span className="text-[9px] text-zinc-400">
+              P&amp;R Archival Studio · Pandi Bulacan
+            </span>
+          </div>
+
         </div>
 
       </aside>
     </>
   );
 };
+
+export default AdminSidebar;

@@ -114,7 +114,6 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ item, on
 
               {/* Fit Guide Badge */}
               <FitGuideBadge
-                silhouette={item.silhouette}
                 tagSize={item.tagSize}
                 recommendedFit={item.recommendedFit}
               />

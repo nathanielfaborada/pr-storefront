@@ -18,7 +18,7 @@ export const QuickActionChips: React.FC<QuickActionChipsProps> = ({
         { id: '4', label: '⏳ Pa-lock until 12mn', promptText: 'Pwede pa-lock muna or hold until tonight?' },
       ]
     : [
-        { id: '1', label: '🔥 How 15-min locks work', promptText: 'How does the 15-minute Bag Lock work for 1-of-1 pieces?' },
+        { id: '1', label: '🔥 How to order?', promptText: 'How to order and checkout pieces?' },
         { id: '2', label: '📦 Same-Day Lalamove?', promptText: 'Available ba same-day Grab/Lalamove dispatch for Metro Manila?' },
         { id: '3', label: '🧼 Fabric & Sanitization', promptText: 'Anong GSM weight ng blanks and sanitized ba before packaging?' },
         { id: '4', label: '🏷️ Next Drop Schedule', promptText: 'Kailan ang next drop ng heavy boxy tees and cargos?' },

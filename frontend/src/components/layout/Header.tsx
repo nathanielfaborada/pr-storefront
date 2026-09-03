@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, ShoppingBag, Menu, User } from 'lucide-react';
+import { Search, ShoppingBag, Menu, User, Lock } from 'lucide-react';
 import { useCart } from '../../context/CartContext.tsx';
 import { useFilter } from '../../context/FilterContext.tsx';
 import { useAuth } from '../../context/AuthContext.tsx';
@@ -12,13 +12,12 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onLogoClick, onMenuClick }) => {
-  const { cart, secondsRemaining, setIsCartOpen } = useCart();
+  const { cart, setIsCartOpen } = useCart();
   const { setIsSearchOpen } = useFilter();
   const { user, isAuthenticated, setIsAuthModalOpen } = useAuth();
   const navigate = useNavigate();
 
   const totalCartCount = cart.length;
-  const isHoldActive = secondsRemaining > 0 && totalCartCount > 0;
 
   const handleLogo = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -66,38 +65,28 @@ export const Header: React.FC<HeaderProps> = ({ onLogoClick, onMenuClick }) => {
           <PRMonogramLogo size="md" showSubtitle={true} className="hidden sm:flex" />
         </a>
 
-        {/* Right: Cart / Bag & Account */}
+        {/* Right: Cart / Bag & Locked Sign In */}
         <div className="flex items-center gap-1 sm:gap-2 shrink-0">
           
-          {/* User Profile Avatar / Sign In */}
-          {isAuthenticated && user ? (
-            <button
-              onClick={() => navigate('/account')}
-              className="p-1 rounded-xl hover:bg-zinc-100 transition-colors"
-              title="My Account"
-            >
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-zinc-950 text-white flex items-center justify-center font-bold text-xs">
-                {user.name.charAt(0).toUpperCase()}
-              </div>
-            </button>
-          ) : (
-            <button
-              onClick={() => setIsAuthModalOpen(true)}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-zinc-700 hover:text-zinc-950 hover:bg-zinc-100 text-xs font-mono font-medium transition-colors"
-            >
-              <User className="w-4 h-4" />
-              <span>Sign In</span>
-            </button>
-          )}
+          {/* Locked Customer Sign In Button */}
+          <button
+            type="button"
+            disabled
+            title="Customer Sign In is currently locked for this demo"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-400 text-xs font-mono font-bold opacity-60 cursor-not-allowed shadow-2xs"
+          >
+            <User className="w-3.5 h-3.5 text-zinc-400" />
+            <span>Sign In</span>
+            <span className="text-[9px] bg-zinc-200/70 text-zinc-500 px-1 py-0.2 rounded flex items-center gap-0.5">
+              <Lock className="w-2.5 h-2.5" />
+              Locked
+            </span>
+          </button>
 
           {/* Bag / Cart Button */}
           <button
             onClick={() => setIsCartOpen(true)}
-            className={`relative flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl transition-all text-xs font-mono font-bold shadow-xs ${
-              isHoldActive
-                ? 'bg-orange-50 text-orange-950 border border-orange-300 shadow-orange-500/10'
-                : 'bg-zinc-950 text-white hover:bg-zinc-800'
-            }`}
+            className="relative flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl transition-all text-xs font-mono font-bold shadow-xs bg-zinc-950 text-white hover:bg-zinc-800 cursor-pointer"
             title="Open Bag"
           >
             <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -105,13 +94,6 @@ export const Header: React.FC<HeaderProps> = ({ onLogoClick, onMenuClick }) => {
             {totalCartCount > 0 && (
               <span className="min-w-4 h-4 px-1 rounded-full bg-orange-500 text-white text-[10px] flex items-center justify-center font-bold">
                 {totalCartCount}
-              </span>
-            )}
-
-            {/* Live Hold Timer inside Cart button */}
-            {isHoldActive && (
-              <span className="font-mono text-orange-600 text-[11px] sm:text-xs pl-1 border-l border-orange-200">
-                {Math.floor(secondsRemaining / 60)}:{String(secondsRemaining % 60).padStart(2, '0')}
               </span>
             )}
           </button>
