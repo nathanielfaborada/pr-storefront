@@ -32,7 +32,7 @@ export const CheckoutPage: React.FC = () => {
     landmarkNotes: '',
   });
 
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('gcash');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('partial_cod');
   const [referenceNumber, setReferenceNumber] = useState('');
   const [receiptUrl, setReceiptUrl] = useState<string | null>(null);
   const [policyAccepted, setPolicyAccepted] = useState(false);
@@ -79,7 +79,11 @@ export const CheckoutPage: React.FC = () => {
     }
 
     if (paymentMethod !== 'cod' && !referenceNumber) {
-      toast.warning('Please provide your GCash or Maya payment reference number.', 'Payment Proof Required');
+      if (paymentMethod === 'paymongo') {
+        toast.warning('Please click the PayMongo payment button to authorize payment.', 'PayMongo Authorization');
+      } else {
+        toast.warning('Please enter your 13-digit GCash / Maya payment reference number.', 'Payment Proof Required');
+      }
       return;
     }
 
@@ -122,31 +126,31 @@ export const CheckoutPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 font-mono text-zinc-950">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-12 font-mono text-zinc-950">
       
       {/* Checkout Masthead */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-zinc-200">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-4 sm:pb-6 border-b border-zinc-200">
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold text-orange-600 uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-orange-600 uppercase tracking-wider mb-0.5">
             <Lock className="w-3.5 h-3.5" />
             <span>Secure Fast Checkout</span>
           </div>
-          <h1 className="font-heading font-extrabold text-2xl sm:text-3xl text-zinc-950 tracking-tight">
+          <h1 className="font-heading font-extrabold text-xl sm:text-3xl text-zinc-950 tracking-tight">
             Complete Your Streetwear Order
           </h1>
         </div>
 
         {/* Step Indicator */}
-        <div className="flex items-center gap-3 text-xs">
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border ${
-            step === 1 ? 'bg-orange-500 text-white border-orange-600 font-bold shadow-xs' : 'bg-zinc-100 text-zinc-600 border-zinc-200'
+        <div className="flex items-center gap-2 text-xs">
+          <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl border ${
+            step === 1 ? 'bg-zinc-950 text-white border-zinc-950 font-bold shadow-2xs' : 'bg-zinc-100 text-zinc-600 border-zinc-200'
           }`}>
             <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">1</span>
             <span>Delivery Info</span>
           </div>
           <span className="text-zinc-300">→</span>
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border ${
-            step === 2 ? 'bg-orange-500 text-white border-orange-600 font-bold shadow-xs' : 'bg-zinc-100 text-zinc-600 border-zinc-200'
+          <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl border ${
+            step === 2 ? 'bg-zinc-950 text-white border-zinc-950 font-bold shadow-2xs' : 'bg-zinc-100 text-zinc-600 border-zinc-200'
           }`}>
             <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">2</span>
             <span>Payment Proof</span>
@@ -155,18 +159,18 @@ export const CheckoutPage: React.FC = () => {
       </div>
 
       {/* Main Checkout Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mt-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8 lg:gap-12 mt-4 sm:mt-8 items-start">
         
         {/* Left Form Area (7 Cols) */}
-        <div className="lg:col-span-7 space-y-6">
+        <div className="lg:col-span-7 space-y-4 sm:space-y-6">
           
           {step === 1 ? (
-            <form onSubmit={handleNextStep} className="bg-white p-6 rounded-3xl border border-zinc-200 space-y-6 shadow-xs">
-              <div className="flex items-center justify-between border-b border-zinc-100 pb-4">
-                <h2 className="font-heading font-bold text-lg text-zinc-950">
+            <form onSubmit={handleNextStep} className="bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-zinc-200 space-y-4 sm:space-y-6 shadow-2xs">
+              <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
+                <h2 className="font-heading font-bold text-base sm:text-lg text-zinc-950">
                   1. Shipping &amp; Recipient Details
                 </h2>
-                <span className="text-[11px] text-zinc-400">All fields required</span>
+                <span className="text-[10px] sm:text-[11px] text-zinc-400">All fields required</span>
               </div>
 
               <ShippingForm
@@ -174,7 +178,7 @@ export const CheckoutPage: React.FC = () => {
                 onChange={(updated) => setShippingAddress(prev => ({ ...prev, ...updated }))}
               />
 
-              <div className="pt-4 border-t border-zinc-100 flex items-center justify-between">
+              <div className="pt-3 border-t border-zinc-100 flex items-center justify-between">
                 <Link to="/" className="text-xs text-zinc-500 hover:text-black flex items-center gap-1">
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Return to Shop</span>
@@ -187,29 +191,30 @@ export const CheckoutPage: React.FC = () => {
               </div>
             </form>
           ) : (
-            <form onSubmit={handleFinalSubmit} className="bg-white p-6 rounded-3xl border border-zinc-200 space-y-6 shadow-xs">
-              <div className="flex items-center justify-between border-b border-zinc-100 pb-4">
-                <h2 className="font-heading font-bold text-lg text-zinc-950">
-                  2. Select Payment Method
+            <form onSubmit={handleFinalSubmit} className="bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-zinc-200 space-y-4 sm:space-y-6 shadow-2xs">
+              <div className="flex items-center justify-between border-b border-zinc-100 pb-3 sm:pb-4">
+                <h2 className="font-heading font-bold text-base sm:text-lg text-zinc-950">
+                  2. Payment Gateway
                 </h2>
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="text-xs font-bold text-orange-600 hover:underline flex items-center gap-1"
+                  className="text-xs font-bold text-orange-600 hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Edit Address</span>
                 </button>
               </div>
 
-              {/* Payment Selector */}
+              {/* Payment Selector with Option 1 and Option 2 */}
               <PaymentSelector
                 selectedMethod={paymentMethod}
                 onChange={setPaymentMethod}
+                totalAmount={totalPhp}
               />
 
               {/* QR Code & Payment Instructions */}
-              <div className="space-y-4 pt-2">
+              <div className="space-y-4 pt-1">
                 <QRPaymentCard
                   method={paymentMethod}
                   referenceNumber={referenceNumber}
@@ -217,8 +222,8 @@ export const CheckoutPage: React.FC = () => {
                   totalAmount={totalPhp}
                 />
 
-                {/* Screenshot Receipt Upload for non-COD */}
-                {paymentMethod !== 'cod' && (
+                {/* Screenshot Receipt Upload for Manual QR Options */}
+                {(paymentMethod === 'partial_cod' || paymentMethod === 'gcash' || paymentMethod === 'maya') && (
                   <ReceiptUploadDropzone
                     receiptUrl={receiptUrl}
                     onReceiptChange={setReceiptUrl}

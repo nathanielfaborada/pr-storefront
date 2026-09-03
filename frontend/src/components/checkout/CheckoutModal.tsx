@@ -105,31 +105,31 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
       onClose={onClose}
       maxWidth="2xl"
       title={
-        <div className="flex items-center justify-between w-full pr-4">
-          <div className="flex items-center gap-2">
-            <Lock className="w-4 h-4 text-amber-600" />
-            <span className="font-heading font-bold text-base text-zinc-950">Fast Checkout</span>
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <Lock className="w-4 h-4 text-orange-600 shrink-0" />
+            <span className="font-heading font-bold text-sm sm:text-base text-zinc-950">Fast Checkout</span>
           </div>
-          <span className="text-xs font-mono font-bold text-amber-700 uppercase tracking-wider">
+          <span className="text-[10px] sm:text-xs font-mono font-bold text-orange-700 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-full shrink-0">
             Step {step} of 2
           </span>
         </div>
       }
     >
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-5">
         {/* Step 1: Shipping Address */}
         {step === 1 && (
-          <form onSubmit={handleNextStep} className="space-y-6">
+          <form onSubmit={handleNextStep} className="space-y-4">
             <ShippingForm
               address={shippingAddress}
               onChange={(updated) => setShippingAddress(prev => ({ ...prev, ...updated }))}
             />
 
-            <div className="pt-4 border-t border-zinc-200 flex items-center justify-between font-mono">
+            <div className="pt-3 border-t border-zinc-200 flex items-center justify-between font-mono gap-2">
               <span className="text-xs text-zinc-500">
-                Total: <strong className="font-mono text-sm text-zinc-950">{formatPhp(totalPhp)}</strong>
+                Total: <strong className="font-mono text-sm sm:text-base text-zinc-950">{formatPhp(totalPhp)}</strong>
               </span>
-              <Button type="submit" variant="primary" size="md">
+              <Button type="submit" variant="primary" size="md" className="cursor-pointer font-bold text-xs sm:text-sm">
                 <span>Continue to Payment</span>
                 <ArrowRight className="w-4 h-4 ml-1" />
               </Button>

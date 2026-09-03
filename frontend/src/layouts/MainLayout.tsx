@@ -6,18 +6,14 @@ import { CustomerSidebar } from '../components/layout/CustomerSidebar.tsx';
 import { SearchModal } from '../components/layout/SearchModal.tsx';
 import { WishlistDrawer } from '../components/layout/WishlistDrawer.tsx';
 import { CartDrawer } from '../components/cart/CartDrawer.tsx';
-import { CheckoutModal } from '../components/checkout/CheckoutModal.tsx';
 import { AuthModal } from '../components/auth/AuthModal.tsx';
 import { ChatDrawer } from '../components/chat/ChatDrawer.tsx';
-import { useCart } from '../context/CartContext.tsx';
 import { INITIAL_PRODUCTS } from '../data/products.ts';
-import { Item, OrderPayload } from '../types/index.ts';
-import { AlertCircle, X } from 'lucide-react';
+import { Item } from '../types/index.ts';
 
 export const MainLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isCustomerMenuOpen, setIsCustomerMenuOpen] = useState(false);
   const [products] = useState<Item[]>(INITIAL_PRODUCTS);
 
@@ -25,10 +21,6 @@ export const MainLayout: React.FC = () => {
 
   const handleSelectProduct = (item: Item) => {
     navigate(`/drops/${item.id}`);
-  };
-
-  const handleOrderCompleted = (order: OrderPayload) => {
-    navigate(`/orders/${order.orderId}`, { state: { order } });
   };
 
   // If on Admin routes (/admin, /admin/drops/new, /admin/login), render clean Admin Studio viewport without customer footer or customer drawers
@@ -59,7 +51,7 @@ export const MainLayout: React.FC = () => {
 
       {/* 3. Page Content */}
       <main className="flex-1">
-        <Outlet context={{ openCheckout: () => setIsCheckoutOpen(true) }} />
+        <Outlet />
       </main>
 
       {/* 4. Customer Global Footer */}
@@ -76,15 +68,8 @@ export const MainLayout: React.FC = () => {
         onSelectProduct={handleSelectProduct}
       />
 
-      <CartDrawer
-        onOpenCheckout={() => setIsCheckoutOpen(true)}
-      />
-
-      <CheckoutModal
-        isOpen={isCheckoutOpen}
-        onClose={() => setIsCheckoutOpen(false)}
-        onOrderCompleted={handleOrderCompleted}
-      />
+      {/* Slide-out Shopping Bag Drawer */}
+      <CartDrawer />
 
       {/* Social Google/Facebook Auth Modal */}
       <AuthModal />
@@ -94,3 +79,5 @@ export const MainLayout: React.FC = () => {
     </div>
   );
 };
+
+export default MainLayout;

@@ -106,7 +106,7 @@ export interface QuickChip {
   promptText: string;
 }
 
-export type PaymentMethod = 'gcash' | 'maya' | 'cod';
+export type PaymentMethod = 'partial_cod' | 'paymongo' | 'gcash' | 'maya' | 'cod';
 
 export type OrderFulfillmentStatus = 
   | 'payment_verification'
